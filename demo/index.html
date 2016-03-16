@@ -27,21 +27,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
       var el = document.querySelector('birch-artifact-grid');
       fetch('./artifacts.json')
-      .then(response => response.json())
-      .then((data) => {
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
         el.artifacts = data.artifact;
       });
       var button1 = document.querySelector('#getAlbum');
-      button1.addEventListener('click', () => {
+      button1.addEventListener('click', function() {
         fetch('./album.json')
-        .then(response => response.json())
-        .then((data) => {
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
           el.album = data.album;
         });
       });
 
       var button2 = document.querySelector('#clearAlbum');
-      button2.addEventListener('click', () => {
+      button2.addEventListener('click', function() {
         el.album = null;
       });
     </script>
