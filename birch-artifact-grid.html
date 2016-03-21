@@ -39,7 +39,9 @@ Example:
       <div class="paper-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
         <div hidden='[[!album.id]]'>
-          <birch-album-display data-test='album-info' album='[[album]]' on-edit-album='_handleDataChange'></birch-album-display>
+          <birch-album-display data-test='album-info' read-only='[[readOnly]]'
+            album='[[album]]' 
+            on-edit-album='_handleDataChange'></birch-album-display>
           <div id="empty-album-notification" class='layout vertical center center-justified' hidden='[[artifacts.length]]'>
             <i hidden="[[mobile]]" class="empty-album-image"></i>
             <div class='text-wrap'>
@@ -157,7 +159,7 @@ Example:
         type: String,
         value: null
       },
-      safari: {
+      readOnly: {
         type: Boolean,
         value: false
       }

@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div>
       <button id='getAlbum'>Get Album</button>
       <button id='clearAlbum'>Clear Album</button>
+      <button id='readOnly'>Toggle readOnly flag</button>
     </div>
     <div>
       <birch-artifact-grid></birch-artifact-grid>
@@ -47,6 +48,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var button2 = document.querySelector('#clearAlbum');
       button2.addEventListener('click', function() {
         el.album = null;
+      });
+
+      var button3 = document.querySelector('#readOnly');
+      button3.addEventListener('click', function() {
+        el.readOnly = !el.readOnly;
       });
     </script>
   </body>
