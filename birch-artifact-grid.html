@@ -10,11 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../layout/layout.html">
 <link rel="import" href="../wc-i18n/wc-i18n.html">
-<link rel="import" href="../fs-behavior/fs-behavior.html">
 <link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../birch-artifact-grid-item/birch-artifact-grid-item-preview.html">
 <link rel="import" href="../birch-album-display/birch-album-display.html">
+<link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -34,7 +34,7 @@ Example:
   <link rel="import" type="css" href="birch-artifact-grid.css">
   <template>
     <iron-media-query query="(max-width: 979px)" query-matches="{{mobile}}"></iron-media-query>
-    <wc-i18n-src locale='[[_lang]]' locale-dir='[[localeDir()]]' domain='birch-artifact-grid'></wc-i18n-src>
+    <wc-i18n-src locale='[[lang]]' locale-dir='[[localeDir()]]' domain='birch-artifact-grid'></wc-i18n-src>
     <paper-scroll-header-panel id='header' class='fit' condenses condensed-header-height='1'>
       <div class="paper-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
@@ -113,7 +113,7 @@ Example:
     is: 'birch-artifact-grid',
     behaviors: [
       WCI18nBehavior,
-      FSBehavior
+      OakI18nBehavior
     ],
     properties: {
       _selectedNodes: {
