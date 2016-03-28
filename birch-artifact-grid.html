@@ -188,21 +188,19 @@ Example:
     },
     _loadCacheState: function(e) {
       if (!e || !e.detail || !e.detail.scrollTarget) return;
-      if (parseInt(e.detail.scrollTarget)) {
-        this.$.selector.scrollToIndex(parseInt(e.detail.scrollTarget));
-      }
+      (function(target) {
+        if (!target) return;
 
-      // Forcing resize in async function to account for iron-list not fully
-      // supporting a separate bound scroller
-      setTimeout(function() {
-        this.fire('resize');
-      }.bind(this), 50);
+        setTimeout(function() {
+          this.$.selector.scrollToIndex(target);
+        }.bind(this), 25)
+      }.bind(this))(parseInt(e.detail.scrollTarget))
     },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
         this._updateStyles();
         this.fire('artifact-grid-scroll', {
-          scrollTarget: (this.$.selector.lastVisibleIndex + this.$.selector.firstVisibleIndex) / 2
+          scrollTarget: this.$.selector.firstVisibleIndex
         });
       }.bind(this));
     },
