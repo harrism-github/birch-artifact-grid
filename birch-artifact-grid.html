@@ -142,6 +142,11 @@ Example:
         type: Boolean,
         value: false
       },
+      selectOnly: {
+        type: Boolean,
+        value: false,
+        observer: '_handleSelectOnly'
+      },
       selectMode: {
         type: Boolean,
         value: false,
@@ -184,6 +189,11 @@ Example:
           && !gParent.hasAttribute('selected')) {
         this.deselectAll();
         this.$.selector.selectItem(getItemById(target.getAttribute('data-uid'), this.artifacts));
+      }
+    },
+    _handleSelectOnly: function(val) {
+      if (val) {
+        this.selectMode = val;
       }
     },
     _loadCacheState: function(e) {
@@ -304,8 +314,10 @@ Example:
       }
     },
     _updateStyles: function() {
-      if (this.selectedItems && this.selectedItems.length == 0) this.set('selectMode', false);
-      if (this.selectedItems && !this.selectMode && this.selectedItems.length > 0) this.set('selectMode', true);
+      if (!this.selectOnly) {
+        if (this.selectedItems && this.selectedItems.length == 0) this.set('selectMode', false);
+        if (this.selectedItems && !this.selectMode && this.selectedItems.length > 0) this.set('selectMode', true);
+      }
 
       // This is a built in Polymer Function to force CSS property/mixin updating within this component
       this.debounce('birch-artifact-grid-update-styles', function() {
