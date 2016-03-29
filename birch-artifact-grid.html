@@ -79,6 +79,7 @@ Example:
             <template is="dom-if" if="[[artifact.id]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
+                read-only='[[readOnly]]'
                 data='[[artifact]]' 
                 select-mode='{{selectMode}}' 
                 view='[[view]]'
