@@ -1,4 +1,7 @@
-# artifact-grid
+[![Build Status](https://travis-ci.org/FamilySearchElements/birch-artifact-grid.svg?branch=master)](https://travis-ci.org/FamilySearchElements/birch-artifact-grid)
+[![Coverage Status](https://coveralls.io/repos/github/FamilySearchElements/birch-artifact-grid/badge.svg?branch=master)](https://coveralls.io/github/FamilySearchElements/birch-artifact-grid?branch=master)
+
+# birch-artifact-grid
 
 An element providing a starting point for your own reusable Polymer elements.
 
