@@ -39,7 +39,7 @@ Example:
       <div class="paper-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
         <div hidden='[[!album.id]]'>
-          <birch-album-display data-test='album-info' read-only='[[_or(readOnly, album.editableByCaller)]]'
+          <birch-album-display data-test='album-info' read-only='[[_or(readOnly, !album.editableByCaller)]]'
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
           <div id="empty-album-notification" class='layout vertical center center-justified' hidden='[[artifacts.length]]'>
