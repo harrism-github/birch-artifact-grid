@@ -312,8 +312,13 @@ Example:
           return index >= firstIndex && index < lastIndex;
         });
 
-        var idsToSelect = artifactsToSelect.forEach(function(artifact) {
-          this.$.selector.selectItem(artifact);
+        // Wrapping this in a this.async as the tap handler that triggers 
+        // select fires immediately after this logic. This will defer the
+        // select till after that happens.
+        this.async(function() {
+          var idsToSelect = artifactsToSelect.forEach(function(artifact) {
+            this.$.selector.selectItem(artifact);
+          }.bind(this));
         }.bind(this));
       }
     },
