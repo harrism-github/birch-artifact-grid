@@ -38,7 +38,7 @@ Example:
     <paper-scroll-header-panel id='header' class='fit' condenses condensed-header-height='1'>
       <div class="paper-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
-        <div hidden='[[!album.id]]'>
+        <div class="hide-album" hidden='[[!album.id]]'>
           <birch-album-display data-test='album-info' read-only='[[_readOnlyAlbum(readOnly, album.editableByCaller)]]'
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
