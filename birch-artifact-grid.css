@@ -4,7 +4,6 @@
   height: 100vh;
   max-height: 100%;
   max-width: 100%;
-  overflow-y: scroll;
   position: relative;
   width: 100vw;
   -webkit-overflow-scrolling: touch;
@@ -14,15 +13,13 @@ p {
   font-size: 1rem;
 }
 
-.paper-header {
+.p-header {
   min-height: 50px;
-  position: relative;
-  z-index: 5;
 }
 
 @media all and (max-width: 979px) {
-  .paper-header {
-    min-height: 100px;
+  .p-header {
+    min-height: 80px;
   }
 }
 

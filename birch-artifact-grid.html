@@ -36,7 +36,7 @@ Example:
     <iron-media-query query="(max-width: 979px)" query-matches="{{mobile}}"></iron-media-query>
     <wc-i18n-src locale='[[lang]]' locale-dir='[[localeDir()]]' domain='birch-artifact-grid'></wc-i18n-src>
     <paper-scroll-header-panel id='header' class='fit' condenses condensed-header-height='1'>
-      <div class="paper-header">
+      <div class="p-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
         <div class="hide-album" hidden='[[!album.id]]'>
           <birch-album-display data-test='album-info' read-only='[[_readOnlyAlbum(readOnly, album.editableByCaller)]]'
@@ -58,6 +58,7 @@ Example:
           </div>
         </div>
       </div>
+      
       <iron-list class='flex' id='selector'
         as='artifact'
         grid 
