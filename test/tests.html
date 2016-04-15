@@ -79,7 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             el.album = dataObj.album;
             rootEl = Polymer.dom(el.root);
             var paperScroll = rootEl.querySelector('paper-scroll-header-panel');
-            var hideAlbumElement = paperScroll.querySelector('.hide-album');
+            var hideAlbumElement = paperScroll.querySelector('#album-display-container');
 
             assert.isFalse(hideAlbumElement.hidden);
 

@@ -38,7 +38,7 @@ Example:
     <paper-scroll-header-panel id='header' class='fit' condenses condensed-header-height='1'>
       <div class="p-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
-        <div class="hide-album" hidden='[[!album.id]]'>
+        <div id="album-display-container" hidden='[[!album.id]]'>
           <birch-album-display data-test='album-info' read-only='[[_readOnlyAlbum(readOnly, album.editableByCaller)]]'
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
@@ -85,7 +85,9 @@ Example:
                 select-mode='{{selectMode}}' 
                 view='[[view]]'
                 owner='[[owner]]'></birch-artifact-grid-item>
-              <i class="check-icon"></i>
+              <template is="dom-if" if="[[!disableSelect]]">
+                <i class="check-icon"></i>
+              </template>
             </template>
             <template is="dom-if" if="[[!artifact.id]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
@@ -157,6 +159,14 @@ Example:
       selectOnContextMenu: {
         type: Boolean,
         value: false,
+      },
+      /*
+        *Boolean for completely removing the ability to select grid items
+      */
+
+      disableSelect: {
+        type: Boolean,
+        value: false
       },
       view: {
         type: String,
