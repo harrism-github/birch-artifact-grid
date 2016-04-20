@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <button id='clearAlbum'>Clear Album</button>
       <button id='readOnly'>Toggle readOnly flag</button>
       <button id='readOnlyAlbum'>Toggle readOnlyAlbum flag</button>
+      <button id='showShareAlbum'>Toggle showShareAlbum flag</button>
     </div>
     <div>
       <birch-artifact-grid select-only></birch-artifact-grid>
@@ -60,6 +61,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       button4.addEventListener('click', function() {
         el.set('album.editableByCaller', !el.album.editableByCaller)
       });
+
+      var button5 = document.querySelector('#showShareAlbum');
+      button5.addEventListener('click', function(){
+        el.showShare = !el.showShare;
+      });
+      
     </script>
   </body>
 </html>

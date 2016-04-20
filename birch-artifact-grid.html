@@ -40,6 +40,7 @@ Example:
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
         <div id="album-display-container" hidden='[[!album.id]]'>
           <birch-album-display data-test='album-info' read-only='[[_readOnlyAlbum(readOnly, album.editableByCaller)]]'
+            show-share='[[showShare]]'
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
           <div id="empty-album-notification" class='layout vertical center center-justified' hidden='[[artifacts.length]]'>
@@ -159,6 +160,13 @@ Example:
       selectOnContextMenu: {
         type: Boolean,
         value: false,
+      },
+      /*
+       * Boolean for showing the share option when readOnly mode is active
+      */
+      showShare: {
+        type: Boolean,
+        value: false
       },
       /*
         *Boolean for completely removing the ability to select grid items
