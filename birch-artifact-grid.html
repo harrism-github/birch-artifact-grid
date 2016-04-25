@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../wc-i18n/wc-i18n.html">
 <link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../iron-list/iron-list.html">
+<link rel="import" href="../vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../birch-artifact-grid-item/birch-artifact-grid-item-preview.html">
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
@@ -60,7 +61,7 @@ Example:
         </div>
       </div>
       
-      <iron-list class='flex' id='selector'
+      <iron-list class='flex' hidden='[[listView]]' id='selector'
         as='artifact'
         grid 
         isSelectMode$='[[selectMode]]'
@@ -96,6 +97,8 @@ Example:
           </div>
         </template>
       </iron-list>
+      <vaadin-grid items="[[artifacts]]" hidden="[[!listView]]">
+      </vaddin-grid>
     </paper-scroll-header-panel>
   </template>
 </dom-module>
@@ -142,6 +145,10 @@ Example:
       selectedItems: {
         type: Array,
         notify: true
+      },
+      listView: {
+        type: Boolean,
+        value: false
       },
       loading: {
         type: Boolean,

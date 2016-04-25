@@ -27,7 +27,8 @@
     "iron-list": "PolymerElements/iron-list#1.3.1",
     "birch-artifact-grid-item": "FamilySearchElements/birch-artifact-grid-item",
     "birch-album-display": "FamilySearchElements/birch-album-display",
-    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior"
+    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior",
+    "vaadin-grid": "^1.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
