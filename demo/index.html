@@ -23,6 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <button id='readOnly'>Toggle readOnly flag</button>
       <button id='readOnlyAlbum'>Toggle readOnlyAlbum flag</button>
       <button id='showShareAlbum'>Toggle showShareAlbum flag</button>
+      <button id='listView'>Toggle List View</button>
     </div>
     <div>
       <birch-artifact-grid select-only></birch-artifact-grid>
@@ -67,6 +68,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         el.showShare = !el.showShare;
       });
       
+      var button6 = document.querySelector('#listView');
+      button6.addEventListener('click', function(){
+        el.listView = !el.listView;
+      });
+
     </script>
   </body>
 </html>

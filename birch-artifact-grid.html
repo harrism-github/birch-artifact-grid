@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../birch-artifact-grid-item/birch-artifact-grid-item-preview.html">
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
+<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -61,9 +62,9 @@ Example:
         </div>
       </div>
       
-      <iron-list class='flex' hidden='[[listView]]' id='selector'
+      <iron-list class='flex' id='selector'
         as='artifact'
-        grid 
+        grid='[[!listView]]' 
         isSelectMode$='[[selectMode]]'
         items='[[artifacts]]' 
         multi-selection
@@ -79,7 +80,7 @@ Example:
             on-dragstart='_handleDragStart' 
             on-dragend='_handleDragEnd'
             on-tap='_tryMultiSelect'>
-            <template is="dom-if" if="[[artifact.id]]">
+            <template is="dom-if" if="[[!listView]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
                 read-only='[[readOnly]]'
@@ -91,14 +92,16 @@ Example:
                 <i class="check-icon"></i>
               </template>
             </template>
+            <template is="dom-if" if="[[listView]]">
+              <birch-artifact-list-item data="[[artifact]]">
+              </birch-artifact-list-item>
+            </template>
             <template is="dom-if" if="[[!artifact.id]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
             </template>
           </div>
         </template>
       </iron-list>
-      <vaadin-grid items="[[artifacts]]" hidden="[[!listView]]">
-      </vaddin-grid>
     </paper-scroll-header-panel>
   </template>
 </dom-module>
@@ -186,6 +189,11 @@ Example:
       view: {
         type: String,
         value: 'my-memories'
+      },
+      listView: {
+        type: Boolean,
+        value: false,
+        observer: '_resizeList'
       },
       owner: {
         type: String,
@@ -293,6 +301,9 @@ Example:
     },
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
+    },
+    _resizeList: function() {
+      this.$.selector.fire('iron-resize');
     },
     _tryMultiSelect: function(e) {
       // Check that this is a multiselect (select with shift key) with
