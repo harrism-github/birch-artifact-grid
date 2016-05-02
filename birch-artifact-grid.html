@@ -302,7 +302,12 @@ Example:
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
     },
-    _resizeList: function() {
+    _resizeList: function(bool) {
+      var elArr = this.$.selector.querySelectorAll('.item');
+      var addOrRemove = (bool && elArr.length > 0) ? 'add' : 'remove';
+      for (var i = 0; i < elArr.length; i++) {
+        elArr[i].classList[addOrRemove]('collapsed');
+      }
       this.$.selector.fire('iron-resize');
     },
     _tryMultiSelect: function(e) {

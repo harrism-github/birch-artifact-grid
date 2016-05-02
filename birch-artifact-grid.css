@@ -61,6 +61,10 @@ birch-artifact-grid-item:hover {
   position: relative;
   padding: 4px 8px;
 }
+.item.collapsed {
+  padding: 0;
+  margin: 0;
+}
 
 birch-artifact-grid-item {
   --grid-item-card-width: calc(46vw - 20px);
