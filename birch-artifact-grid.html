@@ -79,7 +79,9 @@ Example:
             on-contextmenu='_handleContextMenu' 
             on-dragstart='_handleDragStart' 
             on-dragend='_handleDragEnd'
-            on-tap='_tryMultiSelect'>
+            on-tap='_tryMultiSelect'
+            on-mouseover='_showHoverSelect'
+            on-mouseout='_hideHoverSelect'>
             <template is="dom-if" if="[[!listView]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
@@ -93,8 +95,12 @@ Example:
               </template>
             </template>
             <template is="dom-if" if="[[listView]]">
-              <birch-artifact-list-item data="[[artifact]]">
+              <birch-artifact-list-item 
+                data="[[artifact]]">
               </birch-artifact-list-item>
+              <template is="dom-if" if="[[!disableSelect]]">
+                <i class="check-icon item-select" hidden></i>
+              </template>
             </template>
             <template is="dom-if" if="[[!artifact.id]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
@@ -362,6 +368,16 @@ Example:
             this.$.selector.selectItem(artifact);
           }.bind(this));
         }.bind(this));
+      }
+    },
+    _showHoverSelect: function(e) {
+      if (this.listView) {
+        e.currentTarget.querySelector('.item-select').hidden = false;
+      }
+    },
+    _hideHoverSelect: function(e) {
+      if (this.listView) {
+        e.currentTarget.querySelector('.item-select').hidden = true;
       }
     },
     _updateStyles: function() {
