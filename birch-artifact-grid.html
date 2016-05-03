@@ -295,8 +295,13 @@ Example:
           }
         } 
     },
-    _handleSelect: function() {
+    _handleSelect: function(selectedLength) {
       this._updateStyles();
+      if (!this.listView || selectedLength > 1) return;
+      var elArr = this.$.selector.querySelectorAll('.item .item-select.check-icon');
+      for (var i = 0; i < elArr.length; i++) {
+        elArr[i].hidden = selectedLength === 0;
+      }        
     },
     _handleDragEnd: function(e)  {
       this.fire('toggleUploadDrag', { 'disable' : false });
@@ -371,12 +376,12 @@ Example:
       }
     },
     _showHoverSelect: function(e) {
-      if (this.listView) {
+      if (this.listView && this.selectedItems.length === 0) {
         e.currentTarget.querySelector('.item-select').hidden = false;
       }
     },
     _hideHoverSelect: function(e) {
-      if (this.listView) {
+      if (this.listView && this.selectedItems.length === 0) {
         e.currentTarget.querySelector('.item-select').hidden = true;
       }
     },
