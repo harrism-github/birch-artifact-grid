@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../birch-artifact-grid-item/birch-artifact-grid-item-preview.html">
 <link rel="import" href="../birch-album-display/birch-album-display.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
@@ -44,15 +45,18 @@ Example:
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
           <div id="empty-album-notification" class='layout vertical center center-justified' hidden='[[artifacts.length]]'>
-            <i hidden="[[mobile]]" class="empty-album-image"></i>
+            <i hidden='{{_hideIfEitherArgTrue(mobile, readOnly)}}' class="empty-album-image"></i>
             <div class='text-wrap'>
-              <h5>
+              <h5 hidden='[[readOnly]]'>
                 <wc-i18n key='birch-artifact-grid.title'></wc-i18n>
               </h5>
-              <p hidden="[[mobile]]">
+              <h5 hidden='[[!readOnly]]'>
+                <wc-i18n key='birch-artifact-grid.unauth-text'></wc-i18n>
+              </h5>
+              <p hidden='[[_hideIfEitherArgTrue(mobile, readOnly)]]'>
                 <wc-i18n key='birch-artifact-grid.text'></wc-i18n>
               </p>
-              <p hidden="[[!mobile]]">
+              <p hidden='[[_hideIfEitherArgTrue(!mobile, readOnly)]]'>
                 <wc-i18n key='birch-artifact-grid.text-mobile'></wc-i18n>
               </p>
             </div>
@@ -279,6 +283,12 @@ Example:
     },
     _handleDragEnd: function(e)  {
       this.fire('toggleUploadDrag', { 'disable' : false });
+    },
+    /*
+     * Work around Polymer's lack of ability to evaluate expressions in hidden attribute
+    */
+    _hideIfEitherArgTrue: function(arg1, arg2) {
+      return arg1 || arg2;
     },
     _hideLoading: function(loading, artifacts) {
       if (artifacts && artifacts.length) return true;

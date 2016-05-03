@@ -25,6 +25,7 @@
     "fs-behavior": "jshcrowthe/fs-behavior",
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^1.0.15",
     "iron-list": "PolymerElements/iron-list#1.3.1",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "birch-artifact-grid-item": "FamilySearchElements/birch-artifact-grid-item",
     "birch-album-display": "FamilySearchElements/birch-album-display",
     "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior"

@@ -23,18 +23,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <button id='readOnly'>Toggle readOnly flag</button>
       <button id='readOnlyAlbum'>Toggle readOnlyAlbum flag</button>
       <button id='showShareAlbum'>Toggle showShareAlbum flag</button>
+      <button id='artifacts'>Toggle Artifacts</button>
     </div>
     <div>
       <birch-artifact-grid select-only></birch-artifact-grid>
     </div>
     <script>
       var el = document.querySelector('birch-artifact-grid');
+
+      var artifactData = {};
       fetch('./artifacts.json')
       .then(function(res) {
         return res.json();
       })
       .then(function(data) {
-        el.artifacts = data.artifact;
+        artifactData = data.artifact
+        el.artifacts = artifactData;
       });
       var button1 = document.querySelector('#getAlbum');
       button1.addEventListener('click', function() {
@@ -66,7 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       button5.addEventListener('click', function(){
         el.showShare = !el.showShare;
       });
-      
+
+      var button6 = document.querySelector('#artifacts');
+      button6.addEventListener('click', function() {
+        if(el.artifacts.length !== 0) { el.artifacts = []; }
+        else { el.artifacts = artifactData; }
+      });
     </script>
   </body>
 </html>
