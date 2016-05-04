@@ -27,9 +27,9 @@
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^1.0.15",
     "iron-list": "PolymerElements/iron-list#1.3.1",
     "birch-artifact-grid-item": "FamilySearchElements/birch-artifact-grid-item",
+    "birch-artifact-list-item": "liechtym/birch-artifact-list-item",
     "birch-album-display": "FamilySearchElements/birch-album-display",
-    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior",
-    "birch-artifact-list-item": "liechtym/birch-artifact-list-item"
+    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
