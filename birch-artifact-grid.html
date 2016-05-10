@@ -12,9 +12,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../wc-i18n/wc-i18n.html">
 <link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../iron-list/iron-list.html">
-<link rel="import" href="../vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../birch-artifact-grid-item/birch-artifact-grid-item-preview.html">
 <link rel="import" href="../birch-album-display/birch-album-display.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
 <link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item.html">
 
@@ -70,8 +70,7 @@ Example:
         multi-selection
         scroll-target='[[_boundScroller]]'
         selected-items='{{selectedItems}}'
-        on-scroll='_cacheScrollState'
-        selection-enabled>
+        on-scroll='_cacheScrollState'>
         <template>
           <div class="item" 
             data-uid$='[[artifact.id]]'
@@ -79,9 +78,7 @@ Example:
             on-contextmenu='_handleContextMenu' 
             on-dragstart='_handleDragStart' 
             on-dragend='_handleDragEnd'
-            on-tap='_tryMultiSelect'
-            on-mouseover='_showHoverSelect'
-            on-mouseout='_hideHoverSelect'>
+            on-tap='_tryMultiSelect'>
             <template is="dom-if" if="[[!listView]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
@@ -91,15 +88,18 @@ Example:
                 view='[[view]]'
                 owner='[[owner]]'></birch-artifact-grid-item>
               <template is="dom-if" if="[[!disableSelect]]">
-                <i class="check-icon"></i>
+                <i class="grid-select check-icon"></i>
               </template>
             </template>
             <template is="dom-if" if="[[listView]]">
-              <birch-artifact-list-item 
-                data="[[artifact]]">
+              <birch-artifact-list-item draggable="true"  
+                data='[[artifact]]'
+                mobile='[[mobile]]'
+                select-mode='[[selectMode]]'
+                >
               </birch-artifact-list-item>
               <template is="dom-if" if="[[!disableSelect]]">
-                <i class="check-icon item-select" hidden></i>
+                <i class="list-select check-icon"></i>
               </template>
             </template>
             <template is="dom-if" if="[[!artifact.id]]">
@@ -213,6 +213,7 @@ Example:
     },
     observers: [
       '_handleSelect(selectedItems.length)',
+      '_enableSelecting(selectMode, mobile)',
       '_handleDataChange(album.*, artifacts.*)'
     ],
     ready: function() {
@@ -298,11 +299,10 @@ Example:
     },
     _handleSelect: function(selectedLength) {
       this._updateStyles();
-      if (!this.listView || selectedLength > 1) return;
-      var elArr = this.$.selector.querySelectorAll('.item .item-select.check-icon');
-      for (var i = 0; i < elArr.length; i++) {
-        elArr[i].hidden = selectedLength === 0;
-      }        
+    },
+    _enableSelecting: function(selectMode, mobile) {
+      if (!selectMode && mobile) this.$.selector.selectionEnabled = false;
+      else this.$.selector.selectionEnabled = true;
     },
     _handleDragEnd: function(e)  {
       this.fire('toggleUploadDrag', { 'disable' : false });
@@ -374,16 +374,6 @@ Example:
             this.$.selector.selectItem(artifact);
           }.bind(this));
         }.bind(this));
-      }
-    },
-    _showHoverSelect: function(e) {
-      if (this.listView && this.selectedItems.length === 0) {
-        e.currentTarget.querySelector('.item-select').hidden = false;
-      }
-    },
-    _hideHoverSelect: function(e) {
-      if (this.listView && this.selectedItems.length === 0) {
-        e.currentTarget.querySelector('.item-select').hidden = true;
       }
     },
     _updateStyles: function() {

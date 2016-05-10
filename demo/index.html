@@ -24,9 +24,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <button id='readOnlyAlbum'>Toggle readOnlyAlbum flag</button>
       <button id='showShareAlbum'>Toggle showShareAlbum flag</button>
       <button id='listView'>Toggle List View</button>
+      <button id='selectMode'>Toggle Select Mode</button>
     </div>
     <div>
-      <birch-artifact-grid select-only></birch-artifact-grid>
+      <birch-artifact-grid></birch-artifact-grid>
     </div>
     <script>
       var el = document.querySelector('birch-artifact-grid');
@@ -71,6 +72,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var button6 = document.querySelector('#listView');
       button6.addEventListener('click', function(){
         el.listView = !el.listView;
+      });
+
+      var button7 = document.querySelector('#selectMode');
+      button7.addEventListener('click', function(){
+        el.selectMode = !el.selectMode;
       });
 
     </script>
