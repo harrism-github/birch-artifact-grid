@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
+<link rel="import" href="../fs-button/fs-button.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -61,6 +62,12 @@ Example:
               </p>
             </div>
           </div>
+        </div>
+      </div>
+      <div hidden='[[!noAlbum]]' class='layout horizontal center center-justified fit'>
+        <div class='layout center vertical'>
+          <h5><wc-i18n key='birch-artifact-grid.no-album'></wc-i18n></h5>
+          <button is="fs-button" option="recommended"><wc-i18n key='birch-artifact-grid.go-to-memories'></wc-i18n></button>
         </div>
       </div>
       
@@ -137,6 +144,10 @@ Example:
       album: {
         type: Object,
         value: function() { return {}; }
+      },
+      noAlbum: {
+        type: Object,
+        value: false
       },
       artifacts: {
         type: Array,
