@@ -155,11 +155,6 @@ Example:
         type: Array,
         notify: true
       },
-      listView: {
-        type: Boolean,
-        value: false,
-        notify: true
-      },
       loading: {
         type: Boolean,
         value: false
@@ -200,6 +195,7 @@ Example:
       listView: {
         type: Boolean,
         value: false,
+        notify: true,
         observer: '_resizeList'
       },
       owner: {
