@@ -1,5 +1,7 @@
 {
+  "_LRM_PKTAG590": "birch-artifact-grid_2_150 - CHANGES-ONLY",
   "text": "Cliquez sur le signe « + » vert pour ajouter des souvenirs à cet album, ou faites-les glisser et déposez-les dans l’album.",
   "text-mobile": "Cliquez sur le signe « + » vert pour ajouter des souvenirs à cet album, ou sélectionnez ceux d’un autre album.",
-  "title": "Commencer à rassembler des souvenirs"
+  "title": "Commencer à rassembler des souvenirs",
+  "unauth-text": "Il n’y a aucun souvenir de ce type."
 }

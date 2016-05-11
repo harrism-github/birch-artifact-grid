@@ -1,5 +1,7 @@
 {
+  "_LRM_PKTAG2": "birch-artifact-grid_2_149 - CHANGES-ONLY",
   "text": "Haga clic en el signo más de color verde para agregar recuerdos a este álbum o arrastre y suelte los recuerdos en el álbum.",
   "text-mobile": "Haz clic en el signo más de color verde para agregar recuerdos a este álbum o selecciona los recuerdos de otro álbum.",
-  "title": "Empezar a recopilar recuerdos"
+  "title": "Empezar a recopilar recuerdos",
+  "unauth-text": "No hay recuerdos de este tipo."
 }
