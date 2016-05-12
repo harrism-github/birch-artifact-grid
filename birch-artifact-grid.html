@@ -183,7 +183,6 @@ Example:
       /*
         *Boolean for completely removing the ability to select grid items
       */
-
       disableSelect: {
         type: Boolean,
         value: false
@@ -196,7 +195,7 @@ Example:
         type: Boolean,
         value: false,
         notify: true,
-        observer: '_resizeList'
+        observer: '_handleViewChange'
       },
       owner: {
         type: String,
@@ -216,6 +215,7 @@ Example:
       var self = this;
       this.listen(document, 'gallery-deselect-all', 'deselectAll');
       this.listen(document, 'birch-artifact-grid-load-cache', '_loadCacheState');
+      this.listen(document, 'birch-artifact-grid-view-type-cache', '_loadCacheViewType')
       this.listen(this._boundScroller, 'scroll', '_handleScroll');
     },
     _handleContextMenu: function(e) {
@@ -239,21 +239,25 @@ Example:
       if (!e || !e.detail || !e.detail.scrollTarget) return;
       (function(target) {
         if (!target) return;
-
         setTimeout(function() {
           this.$.selector.scrollToIndex(target);
         }.bind(this), 25)
       }.bind(this))(parseInt(e.detail.scrollTarget))
     },
+    _loadCacheViewType: function(e) {
+      if (!e || !e.detail || !e.detail.viewType) return;
+      this.listView = e.detail.viewType === 'list-view';
+    },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
         this._updateStyles();
-        this.fire('artifact-grid-scroll', {
+        this.fire('artifact-grid-view-type', {
           scrollTarget: this.$.selector.firstVisibleIndex
         });
       }.bind(this));
     },
     _handleDataChange: function() {
+      console.log(this.$.header.offsetHeight);
       this.debounce('birch-artifact-grid-measure-header', function() {
         this.$.header.measureHeaderHeight();
       }.bind(this));
@@ -310,8 +314,13 @@ Example:
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
     },
-    _resizeList: function(bool) {
-      var elArr = this.$.selector.querySelectorAll('.item');
+    _handleViewChange: function(bool) {
+      var viewType = bool ? 'list-view' : 'grid-view';
+      this.fire('artifact-grid-view-type', {
+        viewType: viewType
+      });
+      var elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
+      console.log('elArr.length: ' + elArr.length)
       var addOrRemove = (bool && elArr.length > 0) ? 'add' : 'remove';
       for (var i = 0; i < elArr.length; i++) {
         elArr[i].classList[addOrRemove]('collapsed');
