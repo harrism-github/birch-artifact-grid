@@ -28,7 +28,8 @@
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "birch-artifact-grid-item": "FamilySearchElements/birch-artifact-grid-item",
     "birch-album-display": "FamilySearchElements/birch-album-display",
-    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior"
+    "oak-i18n-behavior": "FamilySearchElements/oak-i18n-behavior",
+    "fs-button": "jshcrowthe/fs-button"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

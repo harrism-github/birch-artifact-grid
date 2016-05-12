@@ -272,6 +272,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.isTrue(el.selectMode);
         });
 
+        test('Go to my memories on removed album', function(done) {
+          var eventFired = false;
+          el.addEventListener('gallery-view-changed', function(e) {
+            eventFired = true;
+            expect(e.detail.view).to.equal('my-memories');
+            expect(eventFired).to.be.true;
+            done();
+          })
+          el._goToMemories()
+          window.setTimeout(function() {
+            expect(eventFired).to.be.true;
+          },1000)
+        })
+
       });
 
     </script>
