@@ -67,7 +67,7 @@ Example:
       <div hidden='[[!noAlbum]]' class='layout horizontal center center-justified fit'>
         <div class='layout center vertical'>
           <h5><wc-i18n key='birch-artifact-grid.no-album'></wc-i18n></h5>
-          <button is="fs-button" option="recommended"><wc-i18n key='birch-artifact-grid.go-to-memories'></wc-i18n></button>
+          <button is="fs-button" option="recommended" on-click='_goToMemories'><wc-i18n key='birch-artifact-grid.go-to-memories'></wc-i18n></button>
         </div>
       </div>
       
@@ -213,6 +213,11 @@ Example:
       this.listen(document, 'gallery-deselect-all', 'deselectAll');
       this.listen(document, 'birch-artifact-grid-load-cache', '_loadCacheState');
       this.listen(this._boundScroller, 'scroll', '_handleScroll');
+    },
+    _goToMemories: function() {
+      this.fire('gallery-view-changed', {
+        view: 'my-memories'
+      });
     },
     _handleContextMenu: function(e) {
       if (!this.selectOnContextMenu) return;
