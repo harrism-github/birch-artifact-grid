@@ -93,11 +93,12 @@ Example:
             </template>
             <template is="dom-if" if="[[listView]]">
               <birch-artifact-list-item draggable="true"  
+                data-test='list-item'
+                read-only='[[readOnly]]'
                 data='[[artifact]]'
                 mobile='[[mobile]]'
                 select-mode='[[selectMode]]'
-                >
-              </birch-artifact-list-item>
+                owner='[[owner]]'></birch-artifact-list-item>
               <template is="dom-if" if="[[!disableSelect]]">
                 <i class="list-select check-icon"></i>
               </template>
@@ -250,8 +251,9 @@ Example:
     },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
+
         this._updateStyles();
-        this.fire('artifact-grid-view-type', {
+        this.fire('artifact-grid-scroll', {
           scrollTarget: this.$.selector.firstVisibleIndex
         });
       }.bind(this));
@@ -320,7 +322,10 @@ Example:
         viewType: viewType
       });
       var elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
-      console.log('elArr.length: ' + elArr.length)
+      if (elArr.length === 0) {
+        Polymer.dom.flush();
+        elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
+      }
       var addOrRemove = (bool && elArr.length > 0) ? 'add' : 'remove';
       for (var i = 0; i < elArr.length; i++) {
         elArr[i].classList[addOrRemove]('collapsed');
