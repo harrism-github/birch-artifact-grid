@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
-<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item.html">
+<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item-preview.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -79,7 +79,7 @@ Example:
             on-dragstart='_handleDragStart' 
             on-dragend='_handleDragEnd'
             on-tap='_tryMultiSelect'>
-            <template is="dom-if" if="[[!listView]]">
+            <template is="dom-if" if="[[_gridView(listView, artifact)]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
                 read-only='[[readOnly]]'
@@ -91,7 +91,7 @@ Example:
                 <i class="grid-select check-icon"></i>
               </template>
             </template>
-            <template is="dom-if" if="[[listView]]">
+            <template is="dom-if" if="[[_listView(listView, artifact)]]">
               <birch-artifact-list-item draggable="true"  
                 data-test='list-item'
                 read-only='[[readOnly]]'
@@ -103,8 +103,11 @@ Example:
                 <i class="list-select check-icon"></i>
               </template>
             </template>
-            <template is="dom-if" if="[[!artifact.id]]">
+            <template is="dom-if" if="[[_newGridItem(artifact, listView)]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
+            </template>
+            <template is="dom-if" if="[[_newListItem(artifact, listView)]]">
+              <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
             </template>
           </div>
         </template>
@@ -331,6 +334,19 @@ Example:
         elArr[i].classList[addOrRemove]('collapsed');
       }
       this.$.selector.fire('iron-resize');
+    },
+    _listView(list, artifact) {
+      return (list && artifact.id);
+    },
+    _gridView(list, artifact) {
+      return (!list && artifact.id);
+    },
+    _newGridItem: function(artifact, list) {
+      if(artifact.id == undefined) console.log('its undefined')
+      return (!artifact.id && !list);
+    },
+    _newListItem:function(artifact, list) {
+      return (!artifact.id && list);
     },
     _tryMultiSelect: function(e) {
       // Check that this is a multiselect (select with shift key) with

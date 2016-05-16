@@ -27,16 +27,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <button id='selectMode'>Toggle Select Mode</button>
     </div>
     <div>
-      <birch-artifact-grid></birch-artifact-grid>
+      <birch-artifact-grid select-only></birch-artifact-grid>
     </div>
     <script>
       var el = document.querySelector('birch-artifact-grid');
+
+      var artifactData = {};
       fetch('./artifacts.json')
       .then(function(res) {
         return res.json();
       })
       .then(function(data) {
-        el.artifacts = data.artifact;
+        artifactData = data.artifact
+        el.artifacts = artifactData;
       });
       var button1 = document.querySelector('#getAlbum');
       button1.addEventListener('click', function() {
