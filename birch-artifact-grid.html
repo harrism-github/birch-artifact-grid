@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
-<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item-preview.html">
+<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -103,11 +103,8 @@ Example:
                 <i class="list-select check-icon"></i>
               </template>
             </template>
-            <template is="dom-if" if="[[_newGridItem(artifact, listView)]]">
+            <template is="dom-if" if="[[!artifact.id]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
-            </template>
-            <template is="dom-if" if="[[_newListItem(artifact, listView)]]">
-              <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
             </template>
           </div>
         </template>
@@ -254,18 +251,25 @@ Example:
     },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
-
         this._updateStyles();
         this.fire('artifact-grid-scroll', {
           scrollTarget: this.$.selector.firstVisibleIndex
         });
       }.bind(this));
+      // var elArr = this.$.selector.querySelectorAll('.item:not(.collapsed)');
+      // if (elArr.length > 0) {
+      //   debugger;
+      //   var addOrRemove = (this.listView && elArr.length > 0) ? 'add' : 'remove';
+      //   for (var i = 0; i < elArr.length; i++) {
+      //     elArr[i].classList[addOrRemove]('collapsed');
+      //   }
+      // }
     },
     _handleDataChange: function() {
-      console.log(this.$.header.offsetHeight);
       this.debounce('birch-artifact-grid-measure-header', function() {
         this.$.header.measureHeaderHeight();
       }.bind(this));
+      this._overideIronListItemsHeight();
     },
     _handleDragStart: function(e) {
       this.fire('toggleUploadDrag', { 'disable' : true });
@@ -316,11 +320,18 @@ Example:
       if (artifacts && artifacts.length) return true;
       return !loading
     },
+    _overideIronListItemsHeight: function() {
+      var ironList = this.$$('iron-list');
+      var items = Polymer.dom(ironList.root).querySelector("#items");
+      if (Boolean(items)) {
+        items.style.height = "10px";
+      }
+    },
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
     },
-    _handleViewChange: function(bool) {
-      var viewType = bool ? 'list-view' : 'grid-view';
+    _handleViewChange: function(listView) {
+      var viewType = listView ? 'list-view' : 'grid-view';
       this.fire('artifact-grid-view-type', {
         viewType: viewType
       });
@@ -329,24 +340,42 @@ Example:
         Polymer.dom.flush();
         elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
       }
-      var addOrRemove = (bool && elArr.length > 0) ? 'add' : 'remove';
+      var addOrRemove = (listView && elArr.length > 0) ? 'add' : 'remove';
+
       for (var i = 0; i < elArr.length; i++) {
         elArr[i].classList[addOrRemove]('collapsed');
       }
+      // var observer = new MutationObserver(function(mutations) {
+      //   if (listView) {
+      //     console.log('mutations call')
+      //     mutations.forEach(function (mutation) {
+      //       [].slice.call(mutation.addedNodes).forEach(function (addedNode) {
+      //         if (addedNode.className && addedNode.className.indexOf('item') > -1 && addedNode.className.indexOf('collapsed') == -1 ) {
+      //           addedNode.classList.add('collapsed');
+      //           console.log('collapse removed')
+      //         }
+      //       });
+      //     });
+      //   }
+      // });
+      // var ironList = this.$$('iron-list');
+      // var items = Polymer.dom(ironList.root).querySelector("#items");
+      // observer.observe(ironList, {childList: true, attributes: false})
       this.$.selector.fire('iron-resize');
+      this._overideIronListItemsHeight();
     },
-    _listView(list, artifact) {
-      return (list && artifact.id);
+    _listView: function(list, artifact) {
+     return (list && artifact.id);
     },
-    _gridView(list, artifact) {
-      return (!list && artifact.id);
+    _gridView: function(list, artifact) {
+     return (!list && artifact.id);
     },
     _newGridItem: function(artifact, list) {
-      if(artifact.id == undefined) console.log('its undefined')
-      return (!artifact.id && !list);
+     if(artifact.id == undefined) console.log('its undefined')
+     return (!artifact.id && !list);
     },
     _newListItem:function(artifact, list) {
-      return (!artifact.id && list);
+     return (!artifact.id && list);
     },
     _tryMultiSelect: function(e) {
       // Check that this is a multiselect (select with shift key) with
@@ -423,3 +452,4 @@ Example:
 })();
 
 </script>
+git 
