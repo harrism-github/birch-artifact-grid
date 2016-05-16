@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../birch-album-display/birch-album-display.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../oak-i18n-behavior/oak-i18n-behavior.html">
-<link rel="import" href="../fs-button/fs-button.html">
+<link rel="import" href="../birch-artifact-list-item/birch-artifact-list-item-preview.html">
 
 <!-- TODO: REFACTOR THESE THREE COMPONENTS -->
 <!--
@@ -46,41 +46,31 @@ Example:
             album='[[album]]' 
             on-edit-album='_handleDataChange'></birch-album-display>
           <div id="empty-album-notification" class='layout vertical center center-justified' hidden='[[artifacts.length]]'>
-            <i hidden='{{_hideIfEitherArgTrue(mobile, readOnly)}}' class="empty-album-image"></i>
+            <i hidden="[[mobile]]" class="empty-album-image"></i>
             <div class='text-wrap'>
-              <h5 hidden='[[readOnly]]'>
+              <h5>
                 <wc-i18n key='birch-artifact-grid.title'></wc-i18n>
               </h5>
-              <h5 hidden='[[!readOnly]]'>
-                <wc-i18n key='birch-artifact-grid.unauth-text'></wc-i18n>
-              </h5>
-              <p hidden='[[_hideIfEitherArgTrue(mobile, readOnly)]]'>
+              <p hidden="[[mobile]]">
                 <wc-i18n key='birch-artifact-grid.text'></wc-i18n>
               </p>
-              <p hidden='[[_hideIfEitherArgTrue(!mobile, readOnly)]]'>
+              <p hidden="[[!mobile]]">
                 <wc-i18n key='birch-artifact-grid.text-mobile'></wc-i18n>
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div hidden='[[!noAlbum]]' class='layout horizontal center center-justified fit'>
-        <div class='layout center vertical'>
-          <h5><wc-i18n key='birch-artifact-grid.no-album'></wc-i18n></h5>
-          <button is="fs-button" option="recommended" on-click='_goToMemories'><wc-i18n key='birch-artifact-grid.go-to-memories'></wc-i18n></button>
-        </div>
-      </div>
       
       <iron-list class='flex' id='selector'
         as='artifact'
-        grid 
+        grid='[[!listView]]' 
         isSelectMode$='[[selectMode]]'
         items='[[artifacts]]' 
         multi-selection
         scroll-target='[[_boundScroller]]'
         selected-items='{{selectedItems}}'
-        on-scroll='_cacheScrollState'
-        selection-enabled>
+        on-scroll='_cacheScrollState'>
         <template>
           <div class="item" 
             data-uid$='[[artifact.id]]'
@@ -89,7 +79,7 @@ Example:
             on-dragstart='_handleDragStart' 
             on-dragend='_handleDragEnd'
             on-tap='_tryMultiSelect'>
-            <template is="dom-if" if="[[artifact.id]]">
+            <template is="dom-if" if="[[_gridView(listView, artifact)]]">
               <birch-artifact-grid-item draggable="true" 
                 data-test='grid-item'
                 read-only='[[readOnly]]'
@@ -98,11 +88,26 @@ Example:
                 view='[[view]]'
                 owner='[[owner]]'></birch-artifact-grid-item>
               <template is="dom-if" if="[[!disableSelect]]">
-                <i class="check-icon"></i>
+                <i class="grid-select check-icon"></i>
               </template>
             </template>
-            <template is="dom-if" if="[[!artifact.id]]">
+            <template is="dom-if" if="[[_listView(listView, artifact)]]">
+              <birch-artifact-list-item draggable="true"  
+                data-test='list-item'
+                read-only='[[readOnly]]'
+                data='[[artifact]]'
+                mobile='[[mobile]]'
+                select-mode='[[selectMode]]'
+                owner='[[owner]]'></birch-artifact-list-item>
+              <template is="dom-if" if="[[!disableSelect]]">
+                <i class="list-select check-icon"></i>
+              </template>
+            </template>
+            <template is="dom-if" if="[[_newGridItem(artifact, listView)]]">
               <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
+            </template>
+            <template is="dom-if" if="[[_newListItem(artifact, listView)]]">
+              <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
             </template>
           </div>
         </template>
@@ -145,10 +150,6 @@ Example:
         type: Object,
         value: function() { return {}; }
       },
-      noAlbum: {
-        type: Object,
-        value: false
-      },
       artifacts: {
         type: Array,
         value: function() { return []; },
@@ -186,7 +187,6 @@ Example:
       /*
         *Boolean for completely removing the ability to select grid items
       */
-
       disableSelect: {
         type: Boolean,
         value: false
@@ -194,6 +194,12 @@ Example:
       view: {
         type: String,
         value: 'my-memories'
+      },
+      listView: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: '_handleViewChange'
       },
       owner: {
         type: String,
@@ -206,18 +212,15 @@ Example:
     },
     observers: [
       '_handleSelect(selectedItems.length)',
+      '_enableSelecting(selectMode, mobile)',
       '_handleDataChange(album.*, artifacts.*)'
     ],
     ready: function() {
       var self = this;
       this.listen(document, 'gallery-deselect-all', 'deselectAll');
       this.listen(document, 'birch-artifact-grid-load-cache', '_loadCacheState');
+      this.listen(document, 'birch-artifact-grid-view-type-cache', '_loadCacheViewType')
       this.listen(this._boundScroller, 'scroll', '_handleScroll');
-    },
-    _goToMemories: function() {
-      this.fire('gallery-view-changed', {
-        view: 'my-memories'
-      });
     },
     _handleContextMenu: function(e) {
       if (!this.selectOnContextMenu) return;
@@ -240,14 +243,18 @@ Example:
       if (!e || !e.detail || !e.detail.scrollTarget) return;
       (function(target) {
         if (!target) return;
-
         setTimeout(function() {
           this.$.selector.scrollToIndex(target);
         }.bind(this), 25)
       }.bind(this))(parseInt(e.detail.scrollTarget))
     },
+    _loadCacheViewType: function(e) {
+      if (!e || !e.detail || !e.detail.viewType) return;
+      this.listView = e.detail.viewType === 'list-view';
+    },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
+
         this._updateStyles();
         this.fire('artifact-grid-scroll', {
           scrollTarget: this.$.selector.firstVisibleIndex
@@ -255,6 +262,7 @@ Example:
       }.bind(this));
     },
     _handleDataChange: function() {
+      console.log(this.$.header.offsetHeight);
       this.debounce('birch-artifact-grid-measure-header', function() {
         this.$.header.measureHeaderHeight();
       }.bind(this));
@@ -294,17 +302,15 @@ Example:
           }
         } 
     },
-    _handleSelect: function() {
+    _handleSelect: function(selectedLength) {
       this._updateStyles();
+    },
+    _enableSelecting: function(selectMode, mobile) {
+      if (!selectMode && mobile) this.$.selector.selectionEnabled = false;
+      else this.$.selector.selectionEnabled = true;
     },
     _handleDragEnd: function(e)  {
       this.fire('toggleUploadDrag', { 'disable' : false });
-    },
-    /*
-     * Work around Polymer's lack of ability to evaluate expressions in hidden attribute
-    */
-    _hideIfEitherArgTrue: function(arg1, arg2) {
-      return arg1 || arg2;
     },
     _hideLoading: function(loading, artifacts) {
       if (artifacts && artifacts.length) return true;
@@ -312,6 +318,35 @@ Example:
     },
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
+    },
+    _handleViewChange: function(bool) {
+      var viewType = bool ? 'list-view' : 'grid-view';
+      this.fire('artifact-grid-view-type', {
+        viewType: viewType
+      });
+      var elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
+      if (elArr.length === 0) {
+        Polymer.dom.flush();
+        elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
+      }
+      var addOrRemove = (bool && elArr.length > 0) ? 'add' : 'remove';
+      for (var i = 0; i < elArr.length; i++) {
+        elArr[i].classList[addOrRemove]('collapsed');
+      }
+      this.$.selector.fire('iron-resize');
+    },
+    _listView(list, artifact) {
+      return (list && artifact.id);
+    },
+    _gridView(list, artifact) {
+      return (!list && artifact.id);
+    },
+    _newGridItem: function(artifact, list) {
+      if(artifact.id == undefined) console.log('its undefined')
+      return (!artifact.id && !list);
+    },
+    _newListItem:function(artifact, list) {
+      return (!artifact.id && list);
     },
     _tryMultiSelect: function(e) {
       // Check that this is a multiselect (select with shift key) with
