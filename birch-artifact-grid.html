@@ -341,26 +341,21 @@ Example:
         elArr = this.$.selector.querySelectorAll('.item:not([hidden])');
       }
       var addOrRemove = (listView && elArr.length > 0) ? 'add' : 'remove';
-
       for (var i = 0; i < elArr.length; i++) {
         elArr[i].classList[addOrRemove]('collapsed');
       }
-      // var observer = new MutationObserver(function(mutations) {
-      //   if (listView) {
-      //     console.log('mutations call')
-      //     mutations.forEach(function (mutation) {
-      //       [].slice.call(mutation.addedNodes).forEach(function (addedNode) {
-      //         if (addedNode.className && addedNode.className.indexOf('item') > -1 && addedNode.className.indexOf('collapsed') == -1 ) {
-      //           addedNode.classList.add('collapsed');
-      //           console.log('collapse removed')
-      //         }
-      //       });
-      //     });
-      //   }
-      // });
-      // var ironList = this.$$('iron-list');
-      // var items = Polymer.dom(ironList.root).querySelector("#items");
-      // observer.observe(ironList, {childList: true, attributes: false})
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function (mutation) {
+          [].slice.call(mutation.addedNodes).forEach(function (addedNode) {
+            if (addedNode.className && addedNode.className.indexOf('item') > -1 && addedNode.className.indexOf('collapsed') == -1 ) {
+              addedNode.classList.add('collapsed');
+            }
+          });
+        });
+      });
+      var ironList = this.$$('iron-list');
+      if (listView) observer.observe(ironList, {childList: true, attributes: false});
+      else observer.disconnect();
       this.$.selector.fire('iron-resize');
       this._overideIronListItemsHeight();
     },
@@ -452,4 +447,3 @@ Example:
 })();
 
 </script>
-git 
