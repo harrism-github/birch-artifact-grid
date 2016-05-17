@@ -37,7 +37,7 @@ Example:
   <template>
     <iron-media-query query="(max-width: 979px)" query-matches="{{mobile}}"></iron-media-query>
     <wc-i18n-src locale='[[lang]]' locale-dir='[[localeDir()]]' domain='birch-artifact-grid'></wc-i18n-src>
-    <paper-scroll-header-panel id='header' class='fit' condenses condensed-header-height='1'>
+    <paper-scroll-header-panel id='header' class$='{{_viewTypeClass(listView)}}' condenses condensed-header-height='1'>
       <div class="p-header">
         <i class='loading-icon' hidden='[[_hideLoading(loading, artifacts)]]'></i>
         <div id="album-display-container" hidden='[[!album.id]]'>
@@ -221,7 +221,6 @@ Example:
     },
     observers: [
       '_handleSelect(selectedItems.length)',
-      '_enableSelecting(selectMode, mobile)',
       '_handleDataChange(album.*, artifacts.*)'
     ],
     ready: function() {
@@ -337,6 +336,9 @@ Example:
       });
       this.$.selector.fire('iron-resize');
       this._overideIronListItemsHeight();
+    },
+    _viewTypeClass: function (listView) {
+      return listView ? 'fit list-view' : 'fit grid-view';
     },
     _itemClasses: function(listView) {
       var classString = listView ? 'list-item' : 'grid-item';

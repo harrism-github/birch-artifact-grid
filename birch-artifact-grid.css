@@ -13,13 +13,19 @@ p {
   font-size: 1rem;
 }
 
-.p-header {
+.grid-view .p-header {
   min-height: 50px;
+}
+.list-view .p-header {
+  min-height: 30px;
 }
 
 @media all and (max-width: 979px) {
-  .p-header {
+  .grid-view .p-header {
     min-height: 80px;
+  }
+  .list-view .p-header {
+    min-height: 56px;
   }
 }
 
