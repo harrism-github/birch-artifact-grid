@@ -89,6 +89,9 @@ Example:
                   mobile='[[mobile]]'
                   select-mode='{{selectMode}}'
                   owner='[[owner]]'></birch-artifact-list-item>
+                <template is="dom-if" if="[[!disableSelect]]">
+                  <i class="list-select check-icon"></i>
+                </template>
               </template>
               <template is="dom-if" if="[[!listView]]">
                 <birch-artifact-grid-item draggable="true" 
@@ -98,24 +101,22 @@ Example:
                   select-mode='{{selectMode}}' 
                   view='[[view]]'
                   owner='[[owner]]'></birch-artifact-grid-item>
+                  <template is="dom-if" if="[[!disableSelect]]">
+                    <i class="grid-select check-icon"></i>
+                  </template>
               </template>
             </template>
             <template is="dom-if" if="[[!artifact.id]]">
               <template is="dom-if" if="[[listView]]">
-                <template is="dom-if" if="[[!disableSelect]]">
-                  <i class="check-icon"></i>
-                </template>
                 <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
               </template>
               <template is="dom-if" if="[[!listView]]">
-                <birch-artifact-grid-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-grid-item-preview>
+                <birch-artifact-grid-item-preview 
+                  data-test='grid-item-preview' 
+                  data='{{artifact}}'>
+                </birch-artifact-grid-item-preview>
               </template>
             </template>
-            <template is="dom-if" if="[[!disableSelect]]">
-              <i class="check-icon"></i>
-            </template>
-
-
           </div>
         </template>
       </iron-list>
