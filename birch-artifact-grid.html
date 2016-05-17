@@ -331,6 +331,8 @@ Example:
       return readOnly || !editableByCaller;
     },
     _handleViewChange: function(listView) {
+      debugger;
+      if (!listView) observer.disconnect();
       var viewType = listView ? 'list-view' : 'grid-view';
       this.fire('artifact-grid-view-type', {
         viewType: viewType
@@ -345,6 +347,7 @@ Example:
         elArr[i].classList[addOrRemove]('collapsed');
       }
       var observer = new MutationObserver(function(mutations) {
+        debugger;
         mutations.forEach(function (mutation) {
           [].slice.call(mutation.addedNodes).forEach(function (addedNode) {
             if (addedNode.className && addedNode.className.indexOf('item') > -1 && addedNode.className.indexOf('collapsed') == -1 ) {
@@ -355,7 +358,6 @@ Example:
       });
       var ironList = this.$$('iron-list');
       if (listView) observer.observe(ironList, {childList: true, attributes: false});
-      else observer.disconnect();
       this.$.selector.fire('iron-resize');
       this._overideIronListItemsHeight();
     },
