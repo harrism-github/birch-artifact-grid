@@ -68,6 +68,7 @@ Example:
         isSelectMode$='[[selectMode]]'
         items='[[artifacts]]' 
         multi-selection
+        selection-enabled
         scroll-target='[[_boundScroller]]'
         selected-items='{{selectedItems}}'
         on-scroll='_cacheScrollState'>
@@ -311,10 +312,6 @@ Example:
     },
     _handleSelect: function(selectedLength) {
       this._updateStyles();
-    },
-    _enableSelecting: function(selectMode, mobile) {
-      if (!selectMode && mobile) this.$.selector.selectionEnabled = false;
-      else this.$.selector.selectionEnabled = true;
     },
     _handleDragEnd: function(e)  {
       this.fire('toggleUploadDrag', { 'disable' : false });

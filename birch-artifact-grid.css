@@ -102,7 +102,7 @@ birch-artifact-grid-item {
 *[selected] birch-artifact-list-item {
   --list-item-container-styles: {
     outline: 1px solid #27C4F4;
-    background-color: #EFF8F2;
+    background-color: #D4F3FD;
   };
 }
 
