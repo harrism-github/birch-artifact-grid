@@ -155,6 +155,10 @@ Example:
           return this.$.header.scroller;
         }
       },
+      _viewCacheLoaded: {
+        type: Boolean,
+        value: false
+      },
       album: {
         type: Object,
         value: function() { return {}; }
@@ -227,7 +231,7 @@ Example:
       var self = this;
       this.listen(document, 'gallery-deselect-all', 'deselectAll');
       this.listen(document, 'birch-artifact-grid-load-cache', '_loadCacheState');
-      this.listen(document, 'birch-artifact-grid-view-type-cache', '_loadCacheViewType')
+      this.listen(document, 'birch-artifact-view-type-cache', '_loadCacheViewType')
       this.listen(this._boundScroller, 'scroll', '_handleScroll');
     },
     _handleContextMenu: function(e) {
@@ -259,6 +263,8 @@ Example:
     _loadCacheViewType: function(e) {
       if (!e || !e.detail || !e.detail.viewType) return;
       this.listView = e.detail.viewType === 'list-view';
+      this._cacheViewType();
+      this._viewCacheLoaded = true;
     },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
@@ -330,12 +336,17 @@ Example:
       return readOnly || !editableByCaller;
     },
     _handleViewChange: function(bool) {
-      var viewType = bool ? 'list-view' : 'grid-view';
+      this.$.selector.fire('iron-resize');
+      this._overideIronListItemsHeight();
+      if (this._viewCacheLoaded) {
+        this._cacheViewType();
+      }
+    },
+    _cacheViewType: function() {
+      var viewType = this.listView ? 'list-view' : 'grid-view';
       this.fire('gallery-view-type-change', {
         viewType: viewType
       });
-      this.$.selector.fire('iron-resize');
-      this._overideIronListItemsHeight();
     },
     _viewTypeClass: function (listView) {
       return listView ? 'fit list-view' : 'fit grid-view';
