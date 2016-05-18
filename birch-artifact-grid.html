@@ -331,7 +331,7 @@ Example:
     },
     _handleViewChange: function(bool) {
       var viewType = bool ? 'list-view' : 'grid-view';
-      this.fire('artifact-grid-view-type', {
+      this.fire('gallery-view-type-change', {
         viewType: viewType
       });
       this.$.selector.fire('iron-resize');
