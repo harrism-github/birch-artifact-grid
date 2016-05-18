@@ -271,20 +271,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           assert.isTrue(el.selectMode);
         });
-
-        test('Go to my memories on removed album', function(done) {
+         
+        test('Change list view', function(done) {
           var eventFired = false;
-          el.addEventListener('gallery-view-changed', function(e) {
+          el.addEventListener('artifact-grid-view-type', function(e) {
+            expect(e.detail.viewType).to.equal('list-view')
             eventFired = true;
-            expect(e.detail.view).to.equal('my-memories');
-            expect(eventFired).to.be.true;
             done();
           })
-          el._goToMemories()
-          window.setTimeout(function() {
-            expect(eventFired).to.be.true;
-          },1000)
-        })
+          assert.isFalse(el.listView);
+          el.listView = true;
+          assert.isTrue(el.listView);
+          setTimeout(function() {
+            assert.isTrue(eventFired)
+            done();
+          },2000)
+        });
+
+        test('Cached view type', function() {
+          var obj = {};
+          obj.detail = {};
+          obj.detail.viewType = 'list-view'
+          assert.isFalse(el.listView)
+          el._loadCacheViewType(obj);
+          assert.isTrue(el.listView);
+        });
+
+        test('Enable selecting', function() {
+          var myEl = Polymer.dom(el.root);
+          var selector = myEl.querySelector('#selector');
+          assert.isFalse(selector.selectionEnabled);
+          el._enableSelecting(false, true);
+          assert.isFalse(selector.selectionEnabled);
+          el._enableSelecting(true, true);
+          assert.isTrue(selector.selectionEnabled);
+        });
+
+        test('Override iron-list items height', function() {
+          el.artifacts = dataObj.artifact;
+          el._overideIronListItemsHeight();
+          var ironList = Polymer.dom(el.root).querySelector('iron-list');
+          var items = Polymer.dom(ironList.root).querySelector('#items');
+          expect(items.style.height).to.equal('10px');
+        });
 
       });
 

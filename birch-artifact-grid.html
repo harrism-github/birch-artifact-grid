@@ -315,7 +315,7 @@ Example:
           }
         } 
     },
-    _handleSelect: function(selectedLength) {
+    _handleSelect: function() {
       this._updateStyles();
     },
     _handleDragEnd: function(e)  {
@@ -362,7 +362,6 @@ Example:
       return (!list && artifact);
     },
     _newGridItem: function(artifactId, list) {
-      if(artifactId == undefined) console.log('its undefined')
       return (!artifactId && !list);
     },
     _newListItem: function(artifactId, list) {
