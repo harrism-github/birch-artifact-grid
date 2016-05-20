@@ -64,7 +64,7 @@ Example:
       
       <iron-list class='flex' id='selector'
         as='artifact'
-        grid='[[!listView]]' 
+        grid='[[!listView]]'
         isSelectMode$='[[selectMode]]'
         items='[[artifacts]]' 
         multi-selection
@@ -83,7 +83,7 @@ Example:
 
             <template is="dom-if" if="[[artifact.id]]">
               <template is="dom-if" if="[[listView]]">
-                <birch-artifact-list-item draggable="true"  
+                <birch-artifact-list-item hidden="[[!listView]]" draggable="true"  
                   data-test='list-item'
                   read-only='[[readOnly]]'
                   data='[[artifact]]'
@@ -95,7 +95,7 @@ Example:
                 </template>
               </template>
               <template is="dom-if" if="[[!listView]]">
-                <birch-artifact-grid-item draggable="true" 
+                <birch-artifact-grid-item hidden="[[listView]]" draggable="true" 
                   data-test='grid-item'
                   read-only='[[readOnly]]'
                   data='[[artifact]]' 
@@ -338,6 +338,7 @@ Example:
     },
     _handleViewChange: function(bool) {
       this.$.selector.fire('iron-resize');
+      Polymer.dom.flush();
       this._overideIronListItemsHeight();
       if (this._viewCacheLoaded) {
         this._cacheViewType();
