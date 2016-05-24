@@ -62,40 +62,27 @@ Example:
         </div>
       </div>
       
-      <iron-list class='flex' id='selector'
-        as='artifact'
-        grid='[[!listView]]'
-        isSelectMode$='[[selectMode]]'
-        items='[[artifacts]]' 
-        multi-selection
-        selection-enabled
-        scroll-target='[[_boundScroller]]'
-        selected-items='{{selectedItems}}'
-        on-scroll='_cacheScrollState'>
-        <template>
-          <div class$="{{_itemClasses(listView)}}" 
-            data-uid$='[[artifact.id]]'
-            selected$='[[selected]]' 
-            on-contextmenu='_handleContextMenu' 
-            on-dragstart='_handleDragStart' 
-            on-dragend='_handleDragEnd'
-            on-tap='_tryMultiSelect'>
-
-            <template is="dom-if" if="[[artifact.id]]">
-              <template is="dom-if" if="[[listView]]">
-                <birch-artifact-list-item hidden="[[!listView]]" draggable="true"  
-                  data-test='list-item'
-                  read-only='[[readOnly]]'
-                  data='[[artifact]]'
-                  mobile='[[mobile]]'
-                  select-mode='{{selectMode}}'
-                  owner='[[owner]]'></birch-artifact-list-item>
-                <template is="dom-if" if="[[!disableSelect]]">
-                  <i class="list-select check-icon"></i>
-                </template>
-              </template>
-              <template is="dom-if" if="[[!listView]]">
-                <birch-artifact-grid-item hidden="[[listView]]" draggable="true" 
+      <template is="dom-if" if="[[!listView]]" restamp='[[_restamp]]'>
+        <iron-list class='flex' id='selector grid-selector'
+          as='artifact'
+          grid
+          isSelectMode$='[[selectMode]]'
+          items='[[artifacts]]' 
+          multi-selection
+          selection-enabled
+          scroll-target='[[_boundScroller]]'
+          selected-items='{{selectedItems}}'
+          on-scroll='_cacheScrollState'>
+          <template>
+            <div class="item grid-item" 
+              data-uid$='[[artifact.id]]'
+              selected$='[[selected]]' 
+              on-contextmenu='_handleContextMenu' 
+              on-dragstart='_handleDragStart' 
+              on-dragend='_handleDragEnd'
+              on-tap='_tryMultiSelect'>
+              <template is="dom-if" if="[[artifact.id]]">
+                <birch-artifact-grid-item draggable="true" 
                   data-test='grid-item'
                   read-only='[[readOnly]]'
                   data='[[artifact]]' 
@@ -106,21 +93,53 @@ Example:
                     <i class="grid-select check-icon"></i>
                   </template>
               </template>
-            </template>
-            <template is="dom-if" if="[[!artifact.id]]">
-              <template is="dom-if" if="[[listView]]">
-                <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
-              </template>
-              <template is="dom-if" if="[[!listView]]">
+              <template is="dom-if" if="[[!artifact.id]]">
                 <birch-artifact-grid-item-preview 
                   data-test='grid-item-preview' 
                   data='{{artifact}}'>
                 </birch-artifact-grid-item-preview>
               </template>
-            </template>
-          </div>
-        </template>
-      </iron-list>
+            </div>
+          </template>
+        </iron-list>
+      </template>
+      <template is="dom-if" if="[[listView]]" restamp='[[_restamp]]'>
+        <iron-list class='flex' id='selector list-selector'
+          as='artifact'
+          isSelectMode$='[[selectMode]]'
+          items='[[artifacts]]' 
+          multi-selection
+          selection-enabled
+          scroll-target='[[_boundScroller]]'
+          selected-items='{{selectedItems}}'
+          on-scroll='_cacheScrollState'>
+          <template>
+            <div class="item list-item" 
+              data-uid$='[[artifact.id]]'
+              selected$='[[selected]]' 
+              on-contextmenu='_handleContextMenu' 
+              on-dragstart='_handleDragStart' 
+              on-dragend='_handleDragEnd'
+              on-tap='_tryMultiSelect'>
+              <template is="dom-if" if="[[artifact.id]]">
+                <birch-artifact-list-item draggable="true"  
+                  data-test='list-item'
+                  read-only='[[readOnly]]'
+                  data='[[artifact]]'
+                  mobile='[[mobile]]'
+                  select-mode='{{selectMode}}'
+                  owner='[[owner]]'></birch-artifact-list-item>
+                <template is="dom-if" if="[[!disableSelect]]">
+                  <i class="list-select check-icon"></i>
+                </template>
+              </template>
+              <template is="dom-if" if="[[!artifact.id]]">
+                <birch-artifact-list-item-preview data-test='grid-item-preview' data='{{artifact}}'></birch-artifact-list-item-preview>
+              </template>
+            </div>
+          </template>
+        </iron-list>  
+      </template>
     </paper-scroll-header-panel>
   </template>
 </dom-module>
@@ -154,6 +173,10 @@ Example:
         value: function() {
           return this.$.header.scroller;
         }
+      },
+      _restamp: {
+        type: Boolean,
+        value: false
       },
       _viewCacheLoaded: {
         type: Boolean,
@@ -208,9 +231,12 @@ Example:
         type: String,
         value: 'my-memories'
       },
+      listString: {
+        type: String,
+        computed: '_computeListString(listView)'
+      },
       listView: {
         type: Boolean,
-        value: false,
         notify: true,
         observer: '_handleViewChange'
       },
@@ -231,8 +257,11 @@ Example:
       var self = this;
       this.listen(document, 'gallery-deselect-all', 'deselectAll');
       this.listen(document, 'birch-artifact-grid-load-cache', '_loadCacheState');
-      this.listen(document, 'birch-artifact-view-type-cache', '_loadCacheViewType')
+      this.listen(document, 'birch-artifact-view-type-cache', '_loadCacheViewType');
       this.listen(this._boundScroller, 'scroll', '_handleScroll');
+    },
+    _computeListString: function(listView) {
+      return listView ? 'list' : 'grid';
     },
     _handleContextMenu: function(e) {
       if (!this.selectOnContextMenu) return;
@@ -243,7 +272,8 @@ Example:
           && !parent.hasAttribute('selected')
           && !gParent.hasAttribute('selected')) {
         this.deselectAll();
-        this.$.selector.selectItem(getItemById(target.getAttribute('data-uid'), this.artifacts));
+        var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');
+        if (Boolean(selector)) selector.selectItem(getItemById(target.getAttribute('data-uid'), this.artifacts));
       }
     },
     _handleSelectOnly: function(val) {
@@ -256,7 +286,8 @@ Example:
       (function(target) {
         if (!target) return;
         setTimeout(function() {
-          this.$.selector.scrollToIndex(target);
+          var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');          
+          selector.scrollToIndex(target);
         }.bind(this), 25)
       }.bind(this))(parseInt(e.detail.scrollTarget))
     },
@@ -268,9 +299,9 @@ Example:
     },
     _handleScroll: function() {
       this.debounce('birch-artifact-grid-cache-scroll-state', function() {
-        this._updateStyles();
+        var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector'); 
         this.fire('artifact-grid-scroll', {
-          scrollTarget: this.$.selector.firstVisibleIndex
+          scrollTarget: selector.firstVisibleIndex
         });
       }.bind(this));
     },
@@ -278,15 +309,14 @@ Example:
       this.debounce('birch-artifact-grid-measure-header', function() {
         this.$.header.measureHeaderHeight();
       }.bind(this));
-      this.deselectAll();
-      this._overideIronListItemsHeight();
     },
     _handleDragStart: function(e) {
       this.fire('toggleUploadDrag', { 'disable' : true });
       e.dataTransfer.setData('text', 'drag');
       var target = e.currentTarget;
       if (!target.classList.contains('iron-selected')) {
-        this.$.selector.selectItem(getItemById(target.getAttribute('data-uid'), this.artifacts));
+        var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');
+        if (Boolean(selector)) selector.selectItem(getItemById(target.getAttribute('data-uid'), this.artifacts));
       }
       // If Using Chrome
         if(navigator.userAgent.indexOf("Chrome") != -1)
@@ -326,20 +356,10 @@ Example:
       if (artifacts && artifacts.length) return true;
       return !loading
     },
-    _overideIronListItemsHeight: function() {
-      var ironList = this.$$('iron-list');
-      var items = Polymer.dom(ironList.root).querySelector("#items");
-      if (Boolean(items)) {
-        items.style.height = "10px";
-      }
-    },
     _readOnlyAlbum: function(readOnly, editableByCaller) {
       return readOnly || !editableByCaller;
     },
     _handleViewChange: function(bool) {
-      this.$.selector.fire('iron-resize');
-      Polymer.dom.flush();
-      this._overideIronListItemsHeight();
       if (this._viewCacheLoaded) {
         this._cacheViewType();
       }
@@ -418,7 +438,8 @@ Example:
         // select till after that happens.
         this.async(function() {
           var idsToSelect = artifactsToSelect.forEach(function(artifact) {
-            this.$.selector.selectItem(artifact);
+            var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');
+            selector.selectItem(artifact);
           }.bind(this));
         }.bind(this));
       }
@@ -435,10 +456,24 @@ Example:
       }.bind(this), 16)
     },
     _handleArtifactsChange: function() {
-      this.deselectAll();
+      var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');
+      if (Boolean(selector)) {
+        this._restamp = true;
+        selector.clearSelection();
+        this.listen(selector, 'dom-change', '_updateRestamp');
+      }
+    },
+    _updateRestamp: function(e) {
+      this.debounce('birch-artifact-grid-update-styles', function() {
+        Polymer.updateStyles();
+        this._restamp = false;
+      }.bind(this));
     },
     deselectAll: function() {
-      this.$.selector.clearSelection();
+      var selector = Polymer.dom(this.root).querySelector('#' + this.listString + '-selector');
+      if (Boolean(selector)) {
+        selector.clearSelection();
+      }
     }
   });
 })();
