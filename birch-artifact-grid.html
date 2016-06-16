@@ -90,7 +90,7 @@ Example:
             on-dragend='_handleDragEnd'
             on-tap='_tryMultiSelect'>
             <template is="dom-if" if="[[artifact.id]]">
-              <birch-artifact-grid-item draggable="true" 
+              <birch-artifact-grid-item draggable="{{!readOnly}}" 
                 data-test='grid-item'
                 read-only='[[readOnly]]'
                 data='[[artifact]]' 
@@ -260,6 +260,10 @@ Example:
       }.bind(this));
     },
     _handleDragStart: function(e) {
+      if (this.readOnly) {
+        e.preventDefault();
+        return;
+      };      
       this.fire('toggleUploadDrag', { 'disable' : true });
       e.dataTransfer.setData('text', 'drag');
       var target = e.currentTarget;
